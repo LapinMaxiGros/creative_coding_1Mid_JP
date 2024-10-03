@@ -2,27 +2,37 @@ import Circle from "./Circle.js";
 
 export default class App {
   constructor() {
-    this.canvas;
-    this.ctx;
+    this.canvas = null;
+    this.ctx = null;
+    this.time = 0;
+    this.resizeHandler = this.handleResize.bind(this);
   }
 
   createCanvas() {
     this.canvas = document.createElement("canvas");
     this.ctx = this.canvas.getContext("2d");
+    document.body.appendChild(this.canvas);
+
+    this.handleResize();
+    window.addEventListener("resize", this.resizeHandler);
+  }
+
+  handleResize() {
     this.canvas.width = window.innerWidth;
     this.canvas.height = window.innerHeight;
-    document.body.appendChild(this.canvas);
   }
 
   createGrid() {
     const monCercle = new Circle(this.ctx);
-    let stepX = 120;
-    let stepY = 185;
-    let maxRadius = 12;
-    let minRadius = 10;
+    const stepX = 120;
+    const stepY = 185;
+    const maxRadius = 12;
+    const minRadius = 10;
 
-    let centerX = this.canvas.width / 2;
-    let centerY = this.canvas.height / 2;
+    const centerX = this.canvas.width / 2;
+    const centerY = this.canvas.height / 2;
+
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     for (let i = 0; i < stepX; i++) {
       for (let j = 0; j < stepY; j++) {
@@ -41,12 +51,25 @@ export default class App {
 
         let spacingMultiplier = 0.1 + (distanceToCenter / maxDistance) * 2;
 
-        monCercle.drawCross(
-          centerX + (x - centerX) * spacingMultiplier,
-          centerY + (y - centerY) * spacingMultiplier,
-          radius
-        );
+        let animatedX = centerX + (x - centerX) * spacingMultiplier;
+        let animatedY = centerY + (y - centerY) * spacingMultiplier;
+        let animatedRadius =
+          radius + Math.sin(this.time + distanceToCenter * 0.1) * 4;
+        let rotationAngle = this.time + distanceToCenter * 0.05;
+
+        let colorValue = Math.floor(255 * ratio);
+        this.ctx.strokeStyle = `rgb(${colorValue}, ${255 - colorValue}, 150)`;
+
+        this.ctx.save();
+        this.ctx.translate(animatedX, animatedY);
+        this.ctx.rotate(rotationAngle);
+
+        monCercle.drawCross(0, 0, animatedRadius);
+        this.ctx.restore();
       }
     }
+
+    this.time += 0.05;
+    requestAnimationFrame(() => this.createGrid());
   }
 }
