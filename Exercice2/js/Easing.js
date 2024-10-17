@@ -1,10 +1,6 @@
 class Easing {
   constructor() {}
 
-  /**
-   *
-   * all calculations on time to ease movement
-   */
   backInOut(t) {
     const s = 1.70158 * 1.525;
     if ((t *= 2) < 1) return 0.5 * (t * t * ((s + 1) * t - s));

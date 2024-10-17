@@ -5,21 +5,16 @@ export default class App {
     console.log("app hello");
     this.canvas;
     this.ctx;
-    // premier étape : créer le canvas
     this.createCanvas();
 
-    // nombre de colonnes et lignes pour la grille
     this.cols = 10;
     this.rows = 10;
 
-    // initialiser les lettres sous forme de grille
     this.letters = [];
     this.createLettersGrid();
 
-    // initialiser l'interaction click
     this.initInteraction();
 
-    // dessiner le canvas
     this.draw();
   }
 
@@ -33,15 +28,14 @@ export default class App {
     document.body.appendChild(this.canvas);
   }
 
-  // Créer une grille de lettres
   createLettersGrid() {
     const cellWidth = this.width / this.cols;
     const cellHeight = this.height / this.rows;
-    const radius = Math.min(cellWidth, cellHeight) / 4; // Ajuster la taille du rayon
+    const radius = Math.min(cellWidth, cellHeight) / 4;
 
     for (let row = 0; row < this.rows; row++) {
       for (let col = 0; col < this.cols; col++) {
-        const x = col * cellWidth + cellWidth / 2; // Position au centre de la cellule
+        const x = col * cellWidth + cellWidth / 2;
         const y = row * cellHeight + cellHeight / 2;
         const letter = new Letter(x, y, radius);
         this.letters.push(letter);
@@ -50,32 +44,30 @@ export default class App {
   }
 
   initInteraction() {
-    document.addEventListener("click", (e) => {
-      // Vérifier si le clic est sur une des lettres
+    document.addEventListener("mousemove", (e) => {
       this.letters.forEach((letter) => {
         const dist = Math.sqrt(
-          (e.x - letter.x) * (e.x - letter.x) +
-            (e.y - letter.y) * (e.y - letter.y)
+          (e.clientX - letter.x) ** 2 + (e.clientY - letter.y) ** 2
         );
 
-        // Si le clic est dans le rayon de la lettre, on déclenche l'animation sur cette lettre
         if (dist < letter.radius) {
-          letter.reset(e.x, e.y);
+          letter.targetRadius = Math.random() * 50 + 20;
+        } else {
+          letter.targetRadius = letter.originRadius;
         }
       });
     });
   }
 
   draw() {
-    this.ctx.clearRect(0, 0, this.width, this.height);
+    this.ctx.fillStyle = "black";
+    this.ctx.fillRect(0, 0, this.width, this.height);
 
-    // Dessiner toutes les lettres de la grille
     this.letters.forEach((letter) => {
       letter.update();
       letter.dessine(this.ctx);
     });
 
-    // Transformer le canvas en flip book
     requestAnimationFrame(this.draw.bind(this));
   }
 }
