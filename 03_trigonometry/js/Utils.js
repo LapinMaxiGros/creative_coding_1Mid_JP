@@ -14,7 +14,6 @@ class Utils {
           paths.forEach((path) => {
             const pathLength = path.getTotalLength();
             const points = [];
-            // Increase the number of points for better accuracy
             const numPoints = Math.max(100, Math.ceil(pathLength));
             for (let i = 0; i <= numPoints; i++) {
               const point = path.getPointAtLength((i * pathLength) / numPoints);

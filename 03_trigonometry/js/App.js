@@ -53,8 +53,8 @@ export default class App extends BaseApp {
   }
 
   calculateLetterSize() {
-    this.letterWidth = 50;
-    this.letterHeight = 50;
+    this.letterWidth = 612;
+    this.letterHeight = 792;
   }
 
   animate() {
