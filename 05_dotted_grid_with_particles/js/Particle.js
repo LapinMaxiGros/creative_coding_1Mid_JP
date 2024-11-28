@@ -3,8 +3,8 @@ export default class Particle {
     this.ctx = ctx;
     this.x = x;
     this.y = y;
-    this.size = 5 + Math.random() * 10;
-    this.alpha = 1;
+    this.size = 50 + Math.random() * 3;
+    this.alpha = 0.9;
     this.speed = 2 + Math.random() * 2;
     this.angle = Math.random() * Math.PI * 2;
     this.fadeSpeed = 0.4;

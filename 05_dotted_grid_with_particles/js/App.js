@@ -38,7 +38,7 @@ export default class App extends BaseApp {
   }
 
   createParticles(x, y) {
-    const particleCount = 3;
+    const particleCount = Math.random() < 0.2 ? 1 : 0;
     for (let i = 0; i < particleCount; i++) {
       this.particles.push(new Particle(this.ctx, x, y));
     }
@@ -52,13 +52,13 @@ export default class App extends BaseApp {
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
     this.letters.forEach((letter) => {
-      const i = (letter.y * 1920 + letter.x) * 8;
+      const i = (letter.y * 1920 + letter.x) * 4;
       letter.scale = this.getLuminance([
         pixels[i],
         pixels[i + 1],
         pixels[i + 2],
       ]);
-      if (letter.scale > 0.99999) {
+      if (letter.scale > 0.999999999999) {
         this.createParticles(letter.x, letter.y);
       }
       letter.draw();
