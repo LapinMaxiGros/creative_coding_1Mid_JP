@@ -3,7 +3,6 @@ import BaseApp from "./BaseApp";
 export default class App extends BaseApp {
   constructor() {
     super();
-    //log test
     this.audioFile = "./Music.mp3";
     this.audio = new Audio(this.audioFile);
     this.audio.controls = true;
