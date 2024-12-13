@@ -8,8 +8,8 @@ export default class App extends BaseApp {
     this.audio.controls = true;
     document.body.appendChild(this.audio);
     this.isPlaying = false;
-    this.mouseX = 0; // Position de la souris sur l'axe X
-    this.mouseY = 0; // Position de la souris sur l'axe Y
+    this.mouseX = 0;
+    this.mouseY = 0;
     this.init();
   }
 
@@ -33,7 +33,6 @@ export default class App extends BaseApp {
       }
     });
 
-    // Suivre la position de la souris
     document.addEventListener("mousemove", (e) => {
       this.mouseX = e.clientX;
       this.mouseY = e.clientY;
@@ -62,19 +61,16 @@ export default class App extends BaseApp {
   }
 
   draw() {
-    console.log("draw");
     this.analyseFrequencies();
     this.analyseWaveform();
 
     this.ctx.clearRect(0, 0, this.width, this.height);
 
-    // Visualisation des fréquences avec des cercles bleus
     const circleSpacing = this.width / (this.dataArray.length / 2);
     let x = 0;
     for (let i = 0; i < this.dataArray.length; i++) {
-      const size = this.dataArray[i] * 0.8; // Taille des cercles en fonction de l'intensité du son
+      const size = this.dataArray[i] * 0.8;
 
-      // Créer un dégradé pour chaque cercle bleu
       const gradient = this.ctx.createRadialGradient(
         this.mouseX,
         this.mouseY,
@@ -83,29 +79,26 @@ export default class App extends BaseApp {
         this.mouseY,
         size * 2
       );
-      const colorStart = `rgb(0, 0, ${size + 100})`; // Bleu au centre
-      const colorEnd = `rgb(50, 50, ${size + 100})`; // Bleu plus clair à la périphérie
+      const colorStart = `rgb(0, 0, ${size + 100})`;
+      const colorEnd = `rgb(50, 50, ${size + 100})`;
       gradient.addColorStop(0, colorStart);
       gradient.addColorStop(1, colorEnd);
 
-      // Appliquer le dégradé comme couleur de remplissage
       this.ctx.fillStyle = gradient;
       this.ctx.beginPath();
-      this.ctx.arc(this.mouseX, this.mouseY, size, 0, 2 * Math.PI); // Cercle bleu autour de la souris
+      this.ctx.arc(this.mouseX, this.mouseY, size, 0, 2 * Math.PI);
       this.ctx.fill();
 
       x += circleSpacing;
     }
 
-    // Visualisation de la waveform avec la lettre "K" violette
     const waveSpace = this.width / this.waveArray.length;
     for (let i = 0; i < this.waveArray.length; i++) {
-      const size = (this.waveArray[i] / 128) * 10 + 5; // Taille de la lettre "K" pour la waveform
-      const xPos = this.mouseX + i * waveSpace - this.width / 2; // Décalage horizontal basé sur la position de la souris
+      const size = (this.waveArray[i] / 128) * 10 + 5;
+      const xPos = this.mouseX + i * waveSpace - this.width / 2;
       const yPos =
         this.mouseY + (this.waveArray[i] / 128) * this.height - this.height / 2;
 
-      // Créer un dégradé pour chaque lettre "K" violette
       const waveGradient = this.ctx.createRadialGradient(
         xPos,
         yPos,
@@ -114,13 +107,12 @@ export default class App extends BaseApp {
         yPos,
         size * 2
       );
-      waveGradient.addColorStop(0, "rgba(148, 0, 211, 0.7)"); // Violet au centre
-      waveGradient.addColorStop(1, "rgba(148, 0, 211, 0.4)"); // Violet clair à la périphérie
+      waveGradient.addColorStop(0, "rgba(148, 0, 211, 0.7)");
+      waveGradient.addColorStop(1, "rgba(148, 0, 211, 0.4)");
 
-      // Appliquer le dégradé comme couleur de remplissage pour la lettre "K"
       this.ctx.fillStyle = waveGradient;
-      this.ctx.font = `${size}px Arial`; // Choisir la taille de la lettre "K"
-      this.ctx.fillText("K", xPos, yPos); // Dessiner la lettre "K" à la position calculée
+      this.ctx.font = `${size}px Arial`;
+      this.ctx.fillText("K", xPos, yPos);
     }
 
     requestAnimationFrame(this.draw.bind(this));
